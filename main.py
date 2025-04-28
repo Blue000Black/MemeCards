@@ -1,3 +1,6 @@
+# pip install python-telegram-bot[ext] --upgrade
+# pip install logging
+# pip install config
 import logging
 from telegram.ext import Application, MessageHandler, filters
 from random import randint
