@@ -1,8 +1,14 @@
-# pip install python-telegram-bot[ext] --upgrade
-# pip install logging
-# pip install config
 import subprocess
+import asyncio
+
+
+async def main():
+    tasks = [
+        asyncio.create_task(subprocess.run("server.py", shell=True)),
+        asyncio.create_task(subprocess.run("bot.py", shell=True)),
+    ]
+    await asyncio.gather(*tasks)
+
 
 if __name__ == "__main__":
-    subprocess.run("server.py", shell=True)
-    subprocess.run("bot.py", shell=True)
+    asyncio.run(main())
