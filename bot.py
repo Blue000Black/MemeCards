@@ -11,6 +11,10 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 
+async def start(update, context):
+    await update.message.reply_text('Введите команду /log, чтобы войти, или команду /reg, чтобы зарегистрироваться')
+
+
 async def answer(update, context):
     global port
     global ip
@@ -20,9 +24,7 @@ async def answer(update, context):
     global symbols
     global login
     global password
-    if status == 'not logined':
-        await update.message.reply_text('Введите команду /log, чтобы войти, или команду /reg, чтобы зарегистрироваться')
-    elif status == 'not loginned' and context == '/log':
+    if status == 'not loginned' and context == '/log':
         status = 'log'
         await update.message.reply_text(f'Введите логин и пароль в формате <логин> - <пароль>')
     elif status == 'log':
@@ -48,6 +50,7 @@ async def answer(update, context):
             writer.writerow(i)
         f.close()
         writer.writerow([login, password, ''])
+        status = 'logined'
         await update.message.reply_text(f'Учётная запись создана!\nВаш логин: {login}\nВаш пароль: {password}')
     elif status == 'loginned' and context == '/play':
         await update.message.reply_text(f'Удачной игры! Перейдите по ссылке: http://{ip}:{port}')
