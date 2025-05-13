@@ -23,7 +23,7 @@ async def answer(update, context):
     global started
     if not started:
         started = True
-        await update.message.reply_text(f'Введите команду /log, чтобы войти, или команду /reg, чтобы зарегистрироваться')
+        await update.message.reply_text(f'Введите команду log, чтобы войти, или команду reg, чтобы зарегистрироваться')
     if status == 'not loginned' and update.message.text == 'log':
         status = 'log'
         await update.message.reply_text(f'Введите логин и пароль в формате <логин> - <пароль>')
