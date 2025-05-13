@@ -23,7 +23,7 @@ async def answer(update, context):
     global started
     if not started:
         started = True
-        await update.message.reply_text(f'Введите логин и пароль в формате <логин> - <пароль>')
+        await update.message.reply_text(f'Введите команду /log, чтобы войти, или команду /reg, чтобы зарегистрироваться')
     if status == 'not loginned' and update.message.text == 'log':
         status = 'log'
         await update.message.reply_text(f'Введите логин и пароль в формате <логин> - <пароль>')
@@ -52,7 +52,7 @@ async def answer(update, context):
         writer.writerow([login, password, ''])
         status = 'logined'
         await update.message.reply_text(f'Учётная запись создана!\nВаш логин: {login}\nВаш пароль: {password}')
-    elif status == 'loginned' and update.message.text == '/play':
+    elif status == 'loginned':
         await update.message.reply_text(f'Удачной игры! Перейдите по ссылке: http://{ip}:{port}')
 
 
