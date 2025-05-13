@@ -11,10 +11,6 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 
-async def start(update, context):
-    await update.message.reply_text('Введите команду log, чтобы войти, или команду reg, чтобы зарегистрироваться')
-
-
 async def answer(update, context):
     global port
     global ip
@@ -24,12 +20,16 @@ async def answer(update, context):
     global symbols
     global login
     global password
-    if status == 'not loginned' and context == 'log':
+    global started
+    if not started:
+        started = True
+        await update.message.reply_text(f'Введите логин и пароль в формате <логин> - <пароль>')
+    if status == 'not loginned' and update.message.text == 'log':
         status = 'log'
         await update.message.reply_text(f'Введите логин и пароль в формате <логин> - <пароль>')
     elif status == 'log':
-        login = context.split(' - ')[0]
-        password = context.split(' - ')[1]
+        login = update.message.text.split(' - ')[0]
+        password = update.message.text.split(' - ')[1]
         b = True
         for i in data:
             if i[0] == login and password == i[1]:
@@ -39,7 +39,7 @@ async def answer(update, context):
             else:
                 status = 'not logined'
                 await update.message.reply_text(f'Неверный логин или пароль! Введите команду log ещё раз.')
-    elif status == 'not loginned' and context == 'reg':
+    elif status == 'not loginned' and update.message.text == 'reg':
         status = 'reg'
         login = symbols[randint(0, len(symbols) - 1)] + symbols[randint(0, len(symbols) - 1)] + symbols[randint(0, len(symbols) - 1)] + symbols[randint(0, len(symbols) - 1)]
         password = randint(1000, 9999)
@@ -52,7 +52,7 @@ async def answer(update, context):
         writer.writerow([login, password, ''])
         status = 'logined'
         await update.message.reply_text(f'Учётная запись создана!\nВаш логин: {login}\nВаш пароль: {password}')
-    elif status == 'loginned' and context == '/play':
+    elif status == 'loginned' and update.message.text == '/play':
         await update.message.reply_text(f'Удачной игры! Перейдите по ссылке: http://{ip}:{port}')
 
 
@@ -66,6 +66,6 @@ if __name__ == '__main__':
     reader = csv.reader(open('users.csv', encoding="utf8"), delimiter=',', quotechar='"')
     data = list(row for index, row in enumerate(reader) if index > 0)
     users = dict()
-    application.add_handler(CommandHandler("start", start))
+    started = False
     application.run_polling()
     symbols = 'qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM'
