@@ -21,7 +21,7 @@ async def answer(update, context):
     global login
     global password
     global started
-    if not started:
+    '''if not started:
         started = True
         await update.message.reply_text(f'Введите команду log, чтобы войти, или команду reg, чтобы зарегистрироваться')
     if status == 'not loginned' and update.message.text == 'log':
@@ -36,14 +36,14 @@ async def answer(update, context):
                 b = False
                 status = 'logined'
                 await update.message.reply_text(f'Вход выполнен!')
-            else:
-                status = 'not logined'
-                await update.message.reply_text(f'Неверный логин или пароль! Введите команду log ещё раз.')
+        if b:
+            status = 'not logined'
+            await update.message.reply_text(f'Неверный логин или пароль! Введите команду log ещё раз.')
     elif status == 'not loginned' and update.message.text == 'reg':
         status = 'reg'
         login = symbols[randint(0, len(symbols) - 1)] + symbols[randint(0, len(symbols) - 1)] + symbols[randint(0, len(symbols) - 1)] + symbols[randint(0, len(symbols) - 1)]
         password = randint(1000, 9999)
-        f = open('plantis.csv', 'w', newline='', encoding='utf8')
+        f = open('users.csv', 'w', newline='', encoding='utf8')
         writer = csv.writer(f, delimiter=';', quotechar='"', quoting=csv.QUOTE_MINIMAL)
         writer.writerow(['login', 'password', 'unlocked'])
         for i in data:
@@ -53,7 +53,8 @@ async def answer(update, context):
         status = 'logined'
         await update.message.reply_text(f'Учётная запись создана!\nВаш логин: {login}\nВаш пароль: {password}')
     elif status == 'loginned':
-        await update.message.reply_text(f'Удачной игры! Перейдите по ссылке: http://{ip}:{port}')
+        ''' 
+    await update.message.reply_text(f'Удачной игры! Перейдите по ссылке: http://{ip}:{port}')
 
 
 if __name__ == '__main__':
