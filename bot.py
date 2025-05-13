@@ -1,5 +1,5 @@
 import logging
-from telegram.ext import Application, MessageHandler, filters
+from telegram.ext import Application, MessageHandler, filters, CommandHandler
 import socket
 import csv
 from random import randint
@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 
 
 async def start(update, context):
-    await update.message.reply_text('Введите команду /log, чтобы войти, или команду /reg, чтобы зарегистрироваться')
+    await update.message.reply_text('Введите команду log, чтобы войти, или команду reg, чтобы зарегистрироваться')
 
 
 async def answer(update, context):
@@ -24,7 +24,7 @@ async def answer(update, context):
     global symbols
     global login
     global password
-    if status == 'not loginned' and context == '/log':
+    if status == 'not loginned' and context == 'log':
         status = 'log'
         await update.message.reply_text(f'Введите логин и пароль в формате <логин> - <пароль>')
     elif status == 'log':
@@ -38,8 +38,8 @@ async def answer(update, context):
                 await update.message.reply_text(f'Вход выполнен!')
             else:
                 status = 'not logined'
-                await update.message.reply_text(f'Неверный логин или пароль! Введите команду /log ещё раз.')
-    elif status == 'not loginned' and context == '/reg':
+                await update.message.reply_text(f'Неверный логин или пароль! Введите команду log ещё раз.')
+    elif status == 'not loginned' and context == 'reg':
         status = 'reg'
         login = symbols[randint(0, len(symbols) - 1)] + symbols[randint(0, len(symbols) - 1)] + symbols[randint(0, len(symbols) - 1)] + symbols[randint(0, len(symbols) - 1)]
         password = randint(1000, 9999)
@@ -54,7 +54,6 @@ async def answer(update, context):
         await update.message.reply_text(f'Учётная запись создана!\nВаш логин: {login}\nВаш пароль: {password}')
     elif status == 'loginned' and context == '/play':
         await update.message.reply_text(f'Удачной игры! Перейдите по ссылке: http://{ip}:{port}')
-    await update.message.reply_text(f'http://{ip}:{port}')
 
 
 if __name__ == '__main__':
@@ -67,5 +66,6 @@ if __name__ == '__main__':
     reader = csv.reader(open('users.csv', encoding="utf8"), delimiter=',', quotechar='"')
     data = list(row for index, row in enumerate(reader) if index > 0)
     users = dict()
+    application.add_handler(CommandHandler("start", start))
     application.run_polling()
     symbols = 'qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM'
